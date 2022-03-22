@@ -218,6 +218,13 @@ class Lead(SellingController):
 
 			return contact
 
+
+@frappe.whitelist()
+def fetch_all_notes(doc_name):
+	comment_list = frappe.db.get_all("Comment",filters={"reference_name":doc_name},fields=["*"],order_by='creation desc')
+	return comment_list
+
+
 @frappe.whitelist()
 def make_customer(source_name, target_doc=None):
 	return _make_customer(source_name, target_doc)

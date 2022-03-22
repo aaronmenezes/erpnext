@@ -28,6 +28,7 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 		this.frm.set_query("contact_by", function (doc, cdt, cdn) {
 			return { query: "frappe.core.doctype.user.user.user_query" }
 		});
+		this.get_all_notes();
 	}
 
 	refresh () {
@@ -145,6 +146,41 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 			cur_frm.dashboard.set_headline_alert(html);
 		}
 	}
+
+	get_all_notes() {
+		var $note_list = $(this.frm.fields_dict.notes_list.wrapper).empty();
+		frappe.call({
+			method: "erpnext.crm.doctype.lead.lead.fetch_all_notes",
+			args: {
+				"doc_name": this.frm.doc.name
+			},
+			callback: function(r) {
+				if(!r.exc) {
+					let comment_list = r.message.map((message,index) => `<tr data=${message.name}>
+										<td>${index+1}</td>
+										<td><div style="max-height:3em; overflow:hidden">${message.content}</div></td>
+										<td>${message.comment_by}</td>
+										<td>${frappe.datetime.get_datetime_as_string(message.creation)}</td></tr>`).join('')
+
+					let messages = `<table id="notetable" class="table table-bordered table-hover table-sm" style="cursor: pointer">
+									<thead><tr>
+											<th width="5%">${__("#")}</th>
+											<th width="20%">Note</th>
+											<th width="15%">Author</th>
+											<th width="15%">Date</th>
+										</tr></thead>
+									<tbody>${comment_list}</tbody>
+									</table>`
+					$note_list.append(messages);
+					$note_list.on("click", "#notetable tbody tr", function(e) {
+						const elemt= $("div").find(`[data-name='${$(e.currentTarget).attr("data")}']`)[0]
+						elemt.scrollIntoView({behavior: "smooth", block: "start", inline: "start"})
+					});
+				}
+			}
+		});
+	}
 };
+
 
 extend_cscript(cur_frm.cscript, new erpnext.LeadController({ frm: cur_frm }));

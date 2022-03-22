@@ -3,40 +3,33 @@
  "allow_events_in_timeline": 1,
  "allow_import": 1,
  "autoname": "naming_series:",
- "creation": "2013-04-10 11:45:37",
+ "creation": "2022-02-08 13:14:41.083327",
  "doctype": "DocType",
  "document_type": "Document",
  "email_append_to": 1,
  "engine": "InnoDB",
  "field_order": [
-  "lead_details",
   "naming_series",
   "salutation",
-  "first_name",
-  "middle_name",
-  "last_name",
   "lead_name",
-  "col_break123",
-  "status",
-  "company_name",
-  "designation",
+  "first_name",
   "gender",
-  "contact_details_section",
+  "column_break_1",
+  "designation",
+  "status",
+  "middle_name",
+  "request_type",
+  "col_break123",
+  "company_name",
+  "type",
+  "last_name",
+  "contact_info_tab",
   "email_id",
   "mobile_no",
   "whatsapp_no",
   "column_break_16",
   "phone",
   "phone_ext",
-  "additional_information_section",
-  "no_of_employees",
-  "industry",
-  "market_segment",
-  "column_break_22",
-  "fax",
-  "website",
-  "type",
-  "request_type",
   "address_section",
   "address_html",
   "city",
@@ -46,13 +39,32 @@
   "contact_html",
   "state",
   "country",
-  "section_break_12",
+  "follow_up_tab",
   "lead_owner",
-  "ends_on",
-  "column_break_14",
   "contact_by",
+  "column_break_57",
+  "ends_on",
   "contact_date",
-  "lead_source_details_section",
+  "qualification_tab",
+  "qualified_by",
+  "qualification_status",
+  "column_break_64",
+  "qualified_on",
+  "notes_tab",
+  "notes",
+  "notes_list",
+  "other_information_section",
+  "customer",
+  "image",
+  "title",
+  "other_info_tab",
+  "no_of_employees",
+  "industry",
+  "market_segment",
+  "column_break_22",
+  "fax",
+  "website",
+  "section_break_59",
   "company",
   "territory",
   "language",
@@ -60,21 +72,9 @@
   "source",
   "campaign_name",
   "unsubscribed",
-  "blog_subscriber",
-  "notes_section",
-  "notes",
-  "other_information_section",
-  "customer",
-  "image",
-  "title"
+  "blog_subscriber"
  ],
  "fields": [
-  {
-   "fieldname": "lead_details",
-   "fieldtype": "Section Break",
-   "label": "Lead Details",
-   "options": "fa fa-user"
-  },
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
@@ -189,8 +189,8 @@
    "print_hide": 1
   },
   {
-   "fieldname": "section_break_12",
-   "fieldtype": "Section Break",
+   "fieldname": "follow_up_tab",
+   "fieldtype": "Tab Break",
    "label": "Follow Up"
   },
   {
@@ -203,8 +203,9 @@
    "width": "100px"
   },
   {
-   "fieldname": "column_break_14",
-   "fieldtype": "Column Break"
+   "fieldname": "contact_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contact Info"
   },
   {
    "bold": 1,
@@ -224,15 +225,9 @@
    "no_copy": 1
   },
   {
-   "collapsible": 1,
-   "fieldname": "notes_section",
-   "fieldtype": "Section Break",
-   "label": "Notes"
-  },
-  {
    "fieldname": "notes",
    "fieldtype": "Text Editor",
-   "label": "Notes"
+   "hidden": 1
   },
   {
    "fieldname": "address_html",
@@ -244,29 +239,34 @@
    "fieldname": "city",
    "fieldtype": "Data",
    "label": "City/Town",
-   "mandatory_depends_on": "eval: doc.address_title && doc.address_type"
+   "mandatory_depends_on": "eval: doc.address_title && doc.address_type",
+   "hidden": 1
   },
   {
    "fieldname": "county",
    "fieldtype": "Data",
-   "label": "County"
+   "label": "County",
+   "hidden": 1
   },
   {
    "fieldname": "state",
    "fieldtype": "Data",
-   "label": "State"
+   "label": "State",
+   "hidden": 1
   },
   {
    "fieldname": "country",
    "fieldtype": "Link",
    "label": "Country",
    "mandatory_depends_on": "eval: doc.address_title && doc.address_type",
-   "options": "Country"
+   "options": "Country",
+   "hidden": 1
   },
   {
    "fieldname": "pincode",
    "fieldtype": "Data",
-   "label": "Postal Code"
+   "label": "Postal Code",
+   "hidden": 1
   },
   {
    "fieldname": "column_break2",
@@ -411,12 +411,6 @@
    "label": "Last Name"
   },
   {
-   "collapsible": 1,
-   "fieldname": "additional_information_section",
-   "fieldtype": "Section Break",
-   "label": "Additional Information"
-  },
-  {
    "fieldname": "no_of_employees",
    "fieldtype": "Int",
    "label": "No. of Employees"
@@ -432,18 +426,6 @@
    "options": "Phone"
   },
   {
-   "collapsible": 1,
-   "depends_on": "eval: !doc.__islocal",
-   "fieldname": "address_section",
-   "fieldtype": "Section Break",
-   "label": "Address"
-  },
-  {
-   "fieldname": "lead_source_details_section",
-   "fieldtype": "Section Break",
-   "label": "Lead Source Details"
-  },
-  {
    "fieldname": "column_break_50",
    "fieldtype": "Column Break"
   },
@@ -453,11 +435,6 @@
    "label": "Other Information"
   },
   {
-   "fieldname": "contact_details_section",
-   "fieldtype": "Section Break",
-   "label": "Contact Details"
-  },
-  {
    "fieldname": "column_break_16",
    "fieldtype": "Column Break"
   },
@@ -465,17 +442,77 @@
    "fieldname": "phone_ext",
    "fieldtype": "Data",
    "label": "Phone Ext."
+  },
+  {
+   "fieldname": "qualification_tab",
+   "fieldtype": "Tab Break",
+   "label": "Qualification"
+  },
+  {
+   "fieldname": "notes_tab",
+   "fieldtype": "Tab Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "other_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Additional Information"
+  },
+  {
+   "fieldname": "column_break_57",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_59",
+   "fieldtype": "Section Break",
+   "label": "Lead Source Details"
+  },
+  {
+   "fieldname": "qualified_by",
+   "fieldtype": "Link",
+   "label": "Qualified By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qualified_on",
+   "fieldtype": "Date",
+   "label": "Qualified on"
+  },
+  {
+   "fieldname": "qualification_status",
+   "fieldtype": "Select",
+   "label": "Qualification Status",
+   "options": "Unqualified\nIn Process\nQualified"
+  },
+  {
+   "fieldname": "address_section",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "column_break_64",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "notes_list",
+   "fieldtype": "HTML",
+   "label": "Notes List"
   }
  ],
  "icon": "fa fa-user",
  "idx": 5,
  "image_field": "image",
  "links": [],
- "modified": "2021-08-04 00:24:57.208590",
+ "modified": "2022-03-22 12:42:22.602766",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "Lead",
  "name_case": "Title Case",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -535,6 +572,7 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "subject_field": "title",
  "title_field": "title"
 }

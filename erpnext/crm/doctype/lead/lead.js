@@ -28,7 +28,6 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 		this.frm.set_query("contact_by", function (doc, cdt, cdn) {
 			return { query: "frappe.core.doctype.user.user.user_query" }
 		});
-		this.get_all_notes();
 	}
 
 	refresh () {
@@ -50,6 +49,7 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 		} else {
 			frappe.contacts.clear_address_and_contact(this.frm);
 		}
+		this.get_all_notes();
 	}
 
 	add_lead_to_prospect () {
@@ -156,7 +156,9 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 			},
 			callback: function(r) {
 				if(!r.exc) {
-					let comment_list = r.message.map((message,index) => `<tr data=${message.name}>
+					let comment_list = '<tr><td colspan="4">'+__('No Notes')+'</td></tr>'
+					if(r.message.length>0)
+						comment_list = r.message.map((message,index) => `<tr>
 										<td>${index+1}</td>
 										<td><div style="max-height:3em; overflow:hidden">${message.content}</div></td>
 										<td>${message.comment_by}</td>
@@ -166,21 +168,43 @@ erpnext.LeadController = class LeadController extends frappe.ui.form.Controller 
 									<thead><tr>
 											<th width="5%">${__("#")}</th>
 											<th width="20%">Note</th>
-											<th width="15%">Author</th>
+											<th width="15%">By</th>
 											<th width="15%">Date</th>
 										</tr></thead>
 									<tbody>${comment_list}</tbody>
 									</table>`
 					$note_list.append(messages);
-					$note_list.on("click", "#notetable tbody tr", function(e) {
-						const elemt= $("div").find(`[data-name='${$(e.currentTarget).attr("data")}']`)[0]
-						elemt.scrollIntoView({behavior: "smooth", block: "start", inline: "start"})
-					});
+					if(r.message.length>0)
+						$("#notetable tbody tr").bind("click", function(e) {
+							view_note($(this).find('td'))
+						});
+					else
+						$note_list.unbind("click")
 				}
 			}
 		});
 	}
 };
 
+
+function view_note(message) {
+	const dialog = new frappe.ui.Dialog({
+		title: (message[2].innerText).concat(" : ", message[3].innerText),
+		fields: [
+			{
+				fieldname: 'report_name',
+				fieldtype: 'Text',
+				default: message[1].innerText,
+				read_only: 1
+			}
+		],
+		primary_action_label: __('Close'),
+		secondary_action_label: __('Update'),
+		primary_action: function () {
+			dialog.hide();
+		}
+	});
+	dialog.show();
+}
 
 extend_cscript(cur_frm.cscript, new erpnext.LeadController({ frm: cur_frm }));
